@@ -21,6 +21,9 @@ class LidarScanner:
 
         self.env = env.Env()
     
+    def update_position(self, pos):
+        self.pose = pos
+
     def distance(self, obs_pose):
         ex = obs_pose[0] - self.pose[0]
         ey = obs_pose[1] - self.pose[1]

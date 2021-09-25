@@ -42,7 +42,7 @@ def plot_robot(lidar):
                 )
             )
 
-    plt.plot(x, y, "rs", linewidth=20)
+    plt.plot(lidar.pose[0], lidar.pose[1], "rs", linewidth=20)
 
     for i in range(len(lidar.sense_data)):
         angle = lidar.angle_min + lidar.pose[2] + lidar.resolution*i
@@ -55,13 +55,15 @@ def plot_robot(lidar):
     plt.pause(2)
 
 if __name__ == "__main__":
+    lidar = LidarScanner((0, 0, 0))
     # lidar
     xs = [50, 200, 500, 400]
     ys = [200, 20, 400, 500]
     thetas = [math.pi/2, math.pi/3, math.pi, -5*math.pi/6]
     for i in range(4):
-        x = xs[i]; y = ys[i]; theta = thetas[i]
-        lidar = LidarScanner((x, y, theta))
+        pos =  (xs[i], ys[i], thetas[i])
+        lidar.update_position(pos)
+        print(lidar.pose)
         lidar.sense_obstacle()
         plot_robot(lidar)
     
