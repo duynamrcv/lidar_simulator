@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 
 from env import Env
 from lidar_scanner import LidarScanner
+from obstacle_clustering import clustering
 
 def plot_robot(lidar):
     # Plot environment
@@ -54,11 +55,11 @@ def plot_robot(lidar):
     plt.axis("equal")
     plt.pause(2)
 
-if __name__ == "__main__":
+def main1():
     lidar = LidarScanner((0, 0, 0))
     # lidar
-    xs = [50, 200, 500, 400]
-    ys = [200, 20, 400, 500]
+    xs = [50, 200, 500, 350]
+    ys = [200, 20, 400, 450]
     thetas = [math.pi/2, math.pi/3, math.pi, -5*math.pi/6]
     for i in range(4):
         pos =  (xs[i], ys[i], thetas[i])
@@ -68,3 +69,23 @@ if __name__ == "__main__":
         plot_robot(lidar)
     
     plt.show()
+
+def main2():
+    pos = (350, 450, -5*math.pi/6)
+    lidar = LidarScanner(pos)
+    lidar.sense_obstacle()
+
+    # print("Sensed data: ", lidar.sense_data)
+    plot_robot(lidar)
+    plt.figure()
+    angles = np.arange(lidar.angle_min, lidar.angle_max+lidar.resolution, lidar.resolution)
+    plt.scatter(angles, lidar.sense_data)  
+    clusters = clustering(lidar)
+    for cluster in clusters:
+        plt.scatter(angles[cluster[0]:cluster[-1]+1], lidar.sense_data[cluster[0]:cluster[-1]+1])
+    
+    plt.show()
+
+if __name__ == "__main__":
+    # main1()
+    main2()
